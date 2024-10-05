@@ -1,5 +1,6 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from "../db/config"
+import { UserRoles } from "../interfaces/auth/roles";
 
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
@@ -10,6 +11,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare password: string;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare role: CreationOptional<UserRoles>;
 }
 
 User.init({
@@ -34,6 +36,11 @@ User.init({
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  role: {
+    type: DataTypes.ENUM(UserRoles.USER, UserRoles.ADMIN),
+    allowNull: false,
+    defaultValue: UserRoles.USER,
   },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,

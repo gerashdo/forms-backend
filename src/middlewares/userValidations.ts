@@ -29,13 +29,13 @@ export const isEmailUnique = async (req: Request, res: Response, next: NextFunct
 // }
 
 export const emailExists = async (req: Request, res: Response, next: NextFunction) => {
-  const {email} = req.body
-  const user = await User.findOne({where: {email: email}})
+  const {email} = req.body;
+  const user = await User.findOne({where: {email: email}});
   if (!user) {
     res.status(404).json({
       ok: false,
       errors: {email: {msg: 'Email not found'}},
-    })
+    });
   } else {
     next();
   }
