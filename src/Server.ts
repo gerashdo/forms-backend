@@ -2,8 +2,11 @@ import express, { Express } from "express"
 import cors from "cors"
 import sequalize from "./db/config"
 import authRouter from "./routes/authRoutes"
+import templateRouter from "./routes/templateRoutes"
 import { ApiPaths } from "./interfaces/utils"
 import { notFound } from "./controllers/404"
+import { createBaseTopics } from "./scripts/topics"
+import { createBaseUsers } from "./scripts/users"
 
 
 export class Server {
@@ -18,6 +21,7 @@ export class Server {
     this.app = express()
     this.paths = {
       auth: "/auth",
+      templates: "/templates",
     }
     this.connectDB()
     this.syncDB()
@@ -38,10 +42,17 @@ export class Server {
     sequalize.sync({ force: true })
       .then(() => {
         console.log("[db]: Database synchronized");
+        this.runScripts()
       })
       .catch((error) => {
         console.error("[db]: Unable to synchronize the database:", error);
       });
+  }
+
+  runScripts() {
+    if (process.env.NODE_ENV !== 'development') return
+    createBaseTopics()
+    createBaseUsers()
   }
 
   middlwares() {
@@ -51,6 +62,7 @@ export class Server {
 
   routes() {
     this.app.use(`${this.basePath}${this.paths.auth}`, authRouter)
+    this.app.use(`${this.basePath}${this.paths.templates}`, templateRouter)
     this.app.get('*', notFound)
   }
 
