@@ -7,6 +7,7 @@ import { ApiPaths } from "./interfaces/utils"
 import { notFound } from "./controllers/404"
 import { createBaseTopics } from "./scripts/topics"
 import { createBaseUsers } from "./scripts/users"
+import { createBaseTemplate } from "./scripts/templates"
 
 
 export class Server {
@@ -49,10 +50,11 @@ export class Server {
       });
   }
 
-  runScripts() {
+  async runScripts() {
     if (process.env.NODE_ENV !== 'development') return
-    createBaseTopics()
-    createBaseUsers()
+    await createBaseTopics()
+    await createBaseUsers()
+    await createBaseTemplate()
   }
 
   middlwares() {

@@ -6,12 +6,12 @@ import { QuestionTypes } from "../interfaces/template/question";
 
 class Question extends Model<InferAttributes<Question>, InferCreationAttributes<Question>> {
   declare id: CreationOptional<number>;
-  declare title: string;
-  declare description: string;
+  declare title: CreationOptional<string>;
+  declare description: CreationOptional<string>;
   declare visible: boolean;
   declare templateId: ForeignKey<Template['id']>;
   declare sequence: number;
-  declare type: QuestionTypes;
+  declare type: CreationOptional<QuestionTypes>;
 }
 
 Question.init({
@@ -22,11 +22,11 @@ Question.init({
   },
   title: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   description: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   visible: {
     type: DataTypes.BOOLEAN,
@@ -35,7 +35,7 @@ Question.init({
   },
   templateId: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
   },
   sequence: {
     type: DataTypes.INTEGER,
@@ -43,7 +43,7 @@ Question.init({
   },
   type: {
     type: DataTypes.ENUM(QuestionTypes.MULTIPLE, QuestionTypes.BOOLEAN, QuestionTypes.TEXT, QuestionTypes.INTEGER),
-    allowNull: false,
+    allowNull: true,
   },
 }, {
   sequelize,

@@ -1,9 +1,10 @@
-import { TemplateRequestFields } from "../interfaces/template/template";
+import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
 import Question from "../models/Question";
 import Tag from "../models/Tag";
 import Template from "../models/Template";
 import Topic from "../models/Topic";
 import User from "../models/User";
+import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
 
 
 export const createTemplate = async (templateData: TemplateRequestFields) => {
@@ -28,6 +29,18 @@ const getTemplateById = async (id: number) => {
       ]
     });
     return template;
+  }catch(err) {
+    throw err;
+  }
+}
+
+export const addQuestionToTemplate = async (templateId: number, questionData: QuestionRequestFields) => {
+  try {
+    const template = await Template.findByPk(templateId);
+    if (!template) throw new Error('Template not found');
+    const sequence = await getNextQuestionSequenceNumber(templateId);
+    const question = await Question.create({...questionData, sequence, templateId});
+    return question;
   }catch(err) {
     throw err;
   }

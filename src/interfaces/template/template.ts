@@ -1,3 +1,4 @@
+import { QuestionTypes } from "./question";
 
 export type TemplateRequestFields = {
   title: string;
@@ -5,4 +6,11 @@ export type TemplateRequestFields = {
   description: string;
   topicId: number;
   isPublic?: boolean;
+}
+
+export type QuestionRequestFields = {
+  title?: string;
+  description?: string;
+  visible?: boolean;
+  type?: QuestionTypes;
 }
