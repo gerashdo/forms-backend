@@ -1,4 +1,4 @@
-import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationsMixin, InferAttributes, InferCreationAttributes, Model } from "sequelize";
 import sequelize from '../db/config';
 import Topic from "./Topic";
 import Tag from "./Tag";
@@ -14,6 +14,8 @@ class Template extends Model<InferAttributes<Template>, InferCreationAttributes<
   declare topicId: ForeignKey<Topic['id']>;
   declare image: CreationOptional<string>;
   declare isPublic: boolean;
+
+  declare addTags: HasManyAddAssociationsMixin<Tag, 'id'>;
 }
 
 Template.init({

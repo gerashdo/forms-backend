@@ -13,6 +13,7 @@ router.post("/",
   body("userId").exists().isNumeric().custom(userExists),
   body("description").exists().isLength({min: 4}),
   body("topicId").exists().isNumeric().custom(topicExists),
+  body("tags").exists().isArray({min: 1}),
   body("isPublic").exists().isBoolean(),
   checkValidations,
   createTemplateController

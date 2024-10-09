@@ -4,9 +4,9 @@ import { handleControllerError } from "../helpers/errorHandler";
 
 
 export const createTemplateController = async(req: Request, res: Response) => {
-  const {title, userId, description, topicId, isPublic} = req.body;
+  const {title, userId, description, topicId, isPublic, tags} = req.body;
   try {
-    const template = await createTemplate({title, userId, description, topicId, isPublic});
+    const template = await createTemplate({title, userId, description, topicId, isPublic, tags});
     res.status(201).json({
       ok: true,
       data: template,

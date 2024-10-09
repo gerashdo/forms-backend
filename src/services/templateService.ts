@@ -8,30 +8,25 @@ import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/temp
 
 
 export const createTemplate = async (templateData: TemplateRequestFields) => {
-  try {
-    const templateCreated = await Template.create(templateData);
-    const template = await getTemplateById(templateCreated.id);
-    return template;
-  }catch(err) {
-    throw err;
-  }
+  const { tags, ...rest } = templateData;
+  const templateCreated = await Template.create(rest);
+  const templateTags = await Tag.findAll({where: {id: tags}});
+  await templateCreated.addTags(templateTags);
+  const template = await getTemplateById(templateCreated.id);
+  return template;
 }
 
 const getTemplateById = async (id: number) => {
-  try {
-    const template = await Template.findByPk(id, {
-      attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
-      include: [
-        {model: User, attributes: ['id', 'name', 'lastName', 'email']},
-        {model: Topic, attributes: ['id', 'name']},
-        {model: Tag, attributes: ['id', 'name']},
-        {model: Question, attributes: ['id', 'title', 'description', 'type', 'visible', 'sequence']}
-      ]
-    });
-    return template;
-  }catch(err) {
-    throw err;
-  }
+  const template = await Template.findByPk(id, {
+    attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
+    include: [
+      {model: User, attributes: ['id', 'name', 'lastName', 'email']},
+      {model: Topic, attributes: ['id', 'name']},
+      {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
+      // {model: Question, attributes: ['id', 'title', 'description', 'type', 'visible', 'sequence']}
+    ]
+  });
+  return template;
 }
 
 export const addQuestionToTemplate = async (templateId: number, questionData: QuestionRequestFields) => {
