@@ -3,11 +3,14 @@ import cors from "cors"
 import sequalize from "./db/config"
 import authRouter from "./routes/authRoutes"
 import templateRouter from "./routes/templateRoutes"
+import topicRouter from "./routes/topicRoutes"
+import tagRouter from "./routes/tagRoutes"
 import { ApiPaths } from "./interfaces/utils"
 import { notFound } from "./controllers/404"
 import { createBaseTopics } from "./scripts/topics"
 import { createBaseUsers } from "./scripts/users"
 import { createBaseTemplate } from "./scripts/templates"
+import { createBaseTags } from "./scripts/tags"
 
 
 export class Server {
@@ -23,6 +26,8 @@ export class Server {
     this.paths = {
       auth: "/auth",
       templates: "/templates",
+      tags: "/tags",
+      topics: "/topics",
     }
     this.connectDB()
     this.syncDB()
@@ -53,6 +58,7 @@ export class Server {
   async runScripts() {
     if (process.env.NODE_ENV !== 'development') return
     await createBaseTopics()
+    await createBaseTags()
     await createBaseUsers()
     await createBaseTemplate()
   }
@@ -65,6 +71,8 @@ export class Server {
   routes() {
     this.app.use(`${this.basePath}${this.paths.auth}`, authRouter)
     this.app.use(`${this.basePath}${this.paths.templates}`, templateRouter)
+    this.app.use(`${this.basePath}${this.paths.topics}`, topicRouter)
+    this.app.use(`${this.basePath}${this.paths.tags}`, tagRouter)
     this.app.get('*', notFound)
   }
 
