@@ -1,9 +1,9 @@
-import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
 import Question from "../models/Question";
 import Tag from "../models/Tag";
 import Template from "../models/Template";
 import Topic from "../models/Topic";
 import User from "../models/User";
+import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
 import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
 
 
@@ -16,7 +16,7 @@ export const createTemplate = async (templateData: TemplateRequestFields) => {
   return template;
 }
 
-const getTemplateById = async (id: number) => {
+export const getTemplateById = async (id: number) => {
   const template = await Template.findByPk(id, {
     attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
     include: [
