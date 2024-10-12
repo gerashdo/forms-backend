@@ -1,18 +1,29 @@
 import { Request, Response } from "express";
 import { addQuestionToTemplate, createTemplate, getTemplateById } from "../services/templateService";
 import { handleControllerError } from "../helpers/errorHandler";
+import { deleteFile, uploadFile } from "../helpers/uploadFile";
+import { ALLOWED_IMAGE_EXTENSIONS } from "../constants/template";
 
 
-export const createTemplateController = async(req: Request, res: Response) => {
-  const {title, userId, description, topicId, isPublic, tags} = req.body;
+export const createTemplateController = async (req: Request, res: Response) => {
+  const {title, userId, description, topicId, isPublic} = req.body;
+  const tags = JSON.parse(req.body.tags);
+  let image: string | null = null;
   try {
-    const template = await createTemplate({title, userId, description, topicId, isPublic, tags});
+    if (req.files && req.files.image && !(req.files.image instanceof Array)) {
+      image = await uploadFile(req.files.image, ALLOWED_IMAGE_EXTENSIONS);
+    }
+    const template = await createTemplate({title, userId, description, topicId, isPublic, tags, image});
     res.status(201).json({
       ok: true,
       data: template,
     });
   } catch (error) {
     handleControllerError(res, error);
+    if (image) {
+      deleteFile(image);
+      console.log('Image deleted');
+    }
   }
 }
 

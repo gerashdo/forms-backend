@@ -7,6 +7,7 @@ export type TemplateRequestFields = {
   topicId: number;
   isPublic?: boolean;
   tags: number[];
+  image?: string;
 }
 
 export type QuestionRequestFields = {

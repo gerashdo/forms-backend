@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
+import fileUpload from 'express-fileupload';
 import { addQuestionController, createTemplateController, getTemplateByIdController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
 import { templateExists, topicExists, userExists } from "../helpers/validators/utils";
@@ -7,6 +8,11 @@ import { QuestionTypes } from "../interfaces/template/question";
 
 
 const router = Router();
+
+router.use(fileUpload({
+  useTempFiles: true,
+  tempFileDir: '/tmp/',
+}))
 
 router.post("/",
   body("title").exists().isLength({min: 4}),

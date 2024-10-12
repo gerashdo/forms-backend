@@ -45,7 +45,7 @@ export class Server {
   }
 
   syncDB() {
-    sequalize.sync({ force: true })
+    sequalize.sync({ force: false })
       .then(() => {
         console.log("[db]: Database synchronized");
         this.runScripts()
