@@ -4,7 +4,7 @@ import Template from "../models/Template";
 import Topic from "../models/Topic";
 import User from "../models/User";
 import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
-import { reorderQuestionsAfterDelete } from "../helpers/template/templateOperations";
+import { createTwoBaseQuestions, reorderQuestionsAfterDelete } from "../helpers/template/templateOperations";
 import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
 
 
@@ -13,6 +13,7 @@ export const createTemplate = async (templateData: TemplateRequestFields) => {
   const templateCreated = await Template.create(rest);
   const templateTags = await Tag.findAll({where: {id: tags}});
   await templateCreated.addTags(templateTags);
+  await createTwoBaseQuestions(templateCreated.id);
   const template = await getTemplateById(templateCreated.id);
   return template;
 }
