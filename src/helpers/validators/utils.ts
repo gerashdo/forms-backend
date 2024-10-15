@@ -1,3 +1,4 @@
+import Question from "../../models/Question";
 import Template from "../../models/Template";
 import Topic from "../../models/Topic";
 import User from "../../models/User";
@@ -21,5 +22,12 @@ export const templateExists = async (id: number) => {
   const template = await Template.findByPk(id);
   if (!template) {
     throw new Error('Template not found');
+  }
+}
+
+export const questionExists = async (id: number) => {
+  const question = await Question.findByPk(id);
+  if (!question) {
+    throw new Error('Question not found');
   }
 }

@@ -4,6 +4,7 @@ import Template from "../models/Template";
 import Topic from "../models/Topic";
 import User from "../models/User";
 import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
+import { reorderQuestionsAfterDelete } from "../helpers/template/templateOperations";
 import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
 
 
@@ -39,4 +40,11 @@ export const addQuestionToTemplate = async (templateId: number, questionData: Qu
   }catch(err) {
     throw err;
   }
+}
+
+export const deleteQuestionFromTemplate = async (templateId: number, questionId: number) => {
+  const questionToDelete = await Question.findOne({where: {id: questionId, templateId}});
+  if (!questionToDelete) throw new Error('Question not found');
+  await questionToDelete.destroy();
+  reorderQuestionsAfterDelete(templateId, questionToDelete.sequence);
 }

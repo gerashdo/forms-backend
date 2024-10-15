@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, getTemplateByIdController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
-import { templateExists, topicExists, userExists } from "../helpers/validators/utils";
+import { questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
 
 
@@ -38,6 +38,13 @@ router.get("/:templateId",
   param("templateId").exists().isNumeric().custom(templateExists),
   checkValidations,
   getTemplateByIdController
+)
+
+router.delete("/:templateId/questions/:questionId",
+  param("templateId").exists().isNumeric().custom(templateExists),
+  param("questionId").exists().isNumeric().custom(questionExists),
+  checkValidations,
+  deleteQuestionFromTemplateController
 )
 
 export default router;

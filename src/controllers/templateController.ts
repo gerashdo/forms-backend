@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addQuestionToTemplate, createTemplate, getTemplateById } from "../services/templateService";
+import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById } from "../services/templateService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { deleteFile, uploadFile } from "../helpers/uploadFile";
 import { ALLOWED_IMAGE_EXTENSIONS } from "../constants/template";
@@ -49,6 +49,16 @@ export const getTemplateByIdController = async(req: Request, res: Response) => {
       ok: true,
       data: template,
     });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const deleteQuestionFromTemplateController = async(req: Request, res: Response) => {
+  const {templateId, questionId} = req.params;
+  try {
+    await deleteQuestionFromTemplate(Number(templateId), Number(questionId));
+    res.status(204).json({});
   } catch (error) {
     handleControllerError(res, error);
   }
