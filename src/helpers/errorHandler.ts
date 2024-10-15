@@ -2,7 +2,7 @@ import { Response } from "express"
 
 
 export const handleControllerError = (res: Response, error: unknown) => {
-  console.log(getErrorMessage(error))
+  console.error(getErrorMessage(error))
   res.status(500).json({
     ok: false,
     errors: {server: {msg: 'Internal server error'}}

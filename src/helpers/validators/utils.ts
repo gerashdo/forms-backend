@@ -31,3 +31,10 @@ export const questionExists = async (id: number) => {
     throw new Error('Question not found');
   }
 }
+
+export const noRepeatedIds = async (ids: number[]) => {
+  const idsSet = new Set(ids);
+  if (ids.length !== idsSet.size) {
+    throw new Error("Ids must not be repeated");
+  }
+}

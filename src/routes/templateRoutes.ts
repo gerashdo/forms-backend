@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { body, param } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
-import { questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
+import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
 
 
@@ -45,6 +45,15 @@ router.delete("/:templateId/questions/:questionId",
   param("questionId").exists().isNumeric().custom(questionExists),
   checkValidations,
   deleteQuestionFromTemplateController
+)
+
+router.patch("/:templateId/reorder-questions",
+  param("templateId").exists().isNumeric().custom(templateExists),
+  body("questionsOrder").exists().isArray({min: 1})
+    .withMessage("Questions order must be an array with at least one element")
+    .custom(noRepeatedIds),
+  checkValidations,
+  updateTemplateQuestionsSequenceController
 )
 
 export default router;

@@ -25,7 +25,6 @@ export const getTemplateById = async (id: number) => {
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
       {model: Topic, attributes: ['id', 'name']},
       {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
-      // {model: Question, attributes: ['id', 'title', 'description', 'type', 'visible', 'sequence']}
     ]
   });
   return template;
