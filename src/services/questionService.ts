@@ -35,3 +35,12 @@ export const updateQuestionsSequence = async (templateId: number, questionsIdOrd
     throw error;
   }
 };
+
+export const updateQuestion = async (questionId: number, questionData: Omit<Partial<Question>, "templateId" | "id">) => {
+  const question = await Question.findByPk(questionId);
+  if (!question) {
+    throw new Error('Question not found');
+  }
+  await question.update(questionData);
+  return question;
+}

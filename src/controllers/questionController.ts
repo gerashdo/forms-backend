@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getQuestionsByTemplateId, getQuestions } from "../services/questionService";
+import { getQuestionsByTemplateId, getQuestions, updateQuestion } from "../services/questionService";
 import { handleControllerError } from "../helpers/errorHandler";
 import Question from "../models/Question";
 
@@ -16,6 +16,20 @@ export const getQuestionsController = async (req: Request, res: Response) => {
     res.status(200).json({
       ok: true,
       data: questions,
+    });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const updateQuestionController = async (req: Request, res: Response) => {
+  const {questionId} = req.params;
+  const questionData = req.body;
+  try {
+    const updatedQuestion = await updateQuestion(Number(questionId), questionData);
+    res.status(200).json({
+      ok: true,
+      data: updatedQuestion,
     });
   } catch (error) {
     handleControllerError(res, error);
