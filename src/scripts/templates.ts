@@ -20,8 +20,17 @@ export const createBaseTemplate = async () => {
     isPublic: true,
     tags: [tag.id],
   }
+  const template2 = {
+    title: 'Template 2',
+    userId: user.id,
+    description: 'This is a template',
+    topicId: topic.id,
+    isPublic: false,
+    tags: [tag.id],
+  }
   const templateCreated = await createTemplate(template);
-  if (templateCreated) {
-    console.log('Base Template created');
+  const templateCreated2 = await createTemplate(template2);
+  if (templateCreated && templateCreated2) {
+    console.log('Base Templates created');
   }
 }

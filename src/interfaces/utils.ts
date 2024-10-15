@@ -4,4 +4,5 @@ export type ApiPaths = {
   templates: "/templates",
   topics: "/topics",
   tags: "/tags",
+  questions: "/questions",
 }

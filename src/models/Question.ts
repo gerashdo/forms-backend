@@ -22,7 +22,7 @@ Question.init({
   },
   title: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   description: {
     type: DataTypes.STRING,
@@ -35,7 +35,7 @@ Question.init({
   },
   templateId: {
     type: DataTypes.INTEGER,
-    allowNull: true,
+    allowNull: false,
   },
   sequence: {
     type: DataTypes.INTEGER,
@@ -43,7 +43,7 @@ Question.init({
   },
   type: {
     type: DataTypes.ENUM(QuestionTypes.MULTIPLE, QuestionTypes.BOOLEAN, QuestionTypes.TEXT, QuestionTypes.INTEGER),
-    allowNull: true,
+    allowNull: false,
   },
 }, {
   sequelize,
