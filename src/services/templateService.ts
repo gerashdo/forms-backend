@@ -30,6 +30,21 @@ export const getTemplateById = async (id: number) => {
   return template;
 }
 
+export const getTemplates = async (page: number, limit: number, orderBy: string, order: string) => {
+  const templates = await Template.findAndCountAll({
+    attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
+    include: [
+      {model: User, attributes: ['id', 'name', 'lastName', 'email']},
+      {model: Topic, attributes: ['id', 'name']},
+      {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
+    ],
+    order: [[orderBy, order]],
+    limit,
+    offset: (page - 1) * limit,
+  });
+  return templates;
+}
+
 export const addQuestionToTemplate = async (templateId: number, questionData: QuestionRequestFields) => {
   try {
     const template = await Template.findByPk(templateId);

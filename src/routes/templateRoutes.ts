@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { body, param } from "express-validator";
+import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
 import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
+import { ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
 
 
 const router = Router();
@@ -38,6 +39,17 @@ router.get("/:templateId",
   param("templateId").exists().isNumeric().custom(templateExists),
   checkValidations,
   getTemplateByIdController
+)
+
+router.get("/",
+  query("page").optional().isNumeric(),
+  query("limit").optional().isNumeric(),
+  query("orderBy").optional().isString().isIn(Object.values(ALLOWED_TEMPLATE_ORDER_BY_FIELDS))
+    .withMessage(`Invalid value for orderBy. Valid values are: ${Object.values(ALLOWED_TEMPLATE_ORDER_BY_FIELDS).join(", ")}`),
+  query("order").optional().isString().isIn(Object.values(ALLOWED_TEMPLATE_ORDER_BY))
+    .withMessage(`Invalid value for order. Valid values are: ${Object.values(ALLOWED_TEMPLATE_ORDER_BY).join(", ")}`),
+  checkValidations,
+  getTemplatesController
 )
 
 router.delete("/:templateId/questions/:questionId",

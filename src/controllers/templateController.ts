@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById } from "../services/templateService";
+import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById, getTemplates } from "../services/templateService";
 import { updateQuestionsSequence } from "../services/questionService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { deleteFile, uploadFile } from "../helpers/uploadFile";
-import { ALLOWED_IMAGE_EXTENSIONS } from "../constants/template";
+import { ALLOWED_IMAGE_EXTENSIONS, ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
 
 
 export const createTemplateController = async (req: Request, res: Response) => {
@@ -36,6 +36,29 @@ export const addQuestionController = async(req: Request, res: Response) => {
     res.status(201).json({
       ok: true,
       data: question,
+    });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const getTemplatesController = async(req: Request, res: Response) => {
+  const {
+    page = 1,
+    limit = 10,
+    orderBy = ALLOWED_TEMPLATE_ORDER_BY_FIELDS.createdAt,
+    order = ALLOWED_TEMPLATE_ORDER_BY.DESC
+  } = req.query;
+  try {
+    const templates = await getTemplates(Number(page), Number(limit), String(orderBy), String(order));
+    res.status(200).json({
+      ok: true,
+      data: templates.rows,
+      meta: {
+        total: templates.count,
+        page: Number(page),
+        elementsPerPage: Number(limit),
+      }
     });
   } catch (error) {
     handleControllerError(res, error);
