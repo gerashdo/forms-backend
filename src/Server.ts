@@ -6,6 +6,7 @@ import templateRouter from "./routes/templateRoutes"
 import topicRouter from "./routes/topicRoutes"
 import tagRouter from "./routes/tagRoutes"
 import questionRouter from "./routes/questionRoutes"
+import formRouter from "./routes/formRoutes"
 import { ApiPaths } from "./interfaces/utils"
 import { notFound } from "./controllers/404"
 import { createBaseTopics } from "./scripts/topics"
@@ -30,6 +31,7 @@ export class Server {
       tags: "/tags",
       topics: "/topics",
       questions: "/questions",
+      forms: "/forms",
     }
     this.connectDB()
     this.syncDB()
@@ -76,6 +78,7 @@ export class Server {
     this.app.use(`${this.basePath}${this.paths.topics}`, topicRouter)
     this.app.use(`${this.basePath}${this.paths.tags}`, tagRouter)
     this.app.use(`${this.basePath}${this.paths.questions}`, questionRouter)
+    this.app.use(`${this.basePath}${this.paths.forms}`, formRouter)
     this.app.get('*', notFound)
   }
 

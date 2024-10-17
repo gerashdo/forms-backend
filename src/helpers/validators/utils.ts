@@ -1,3 +1,4 @@
+import Form from "../../models/Form";
 import Question from "../../models/Question";
 import Template from "../../models/Template";
 import Topic from "../../models/Topic";
@@ -36,5 +37,12 @@ export const noRepeatedIds = async (ids: number[]) => {
   const idsSet = new Set(ids);
   if (ids.length !== idsSet.size) {
     throw new Error("Ids must not be repeated");
+  }
+}
+
+export const formExists = async (id: number) => {
+  const form = await Form.findByPk(id);
+  if (!form) {
+    throw new Error('Form not found');
   }
 }

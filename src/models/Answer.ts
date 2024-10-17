@@ -50,10 +50,7 @@ Answer.init({
   timestamps: false,
 })
 
-Form.hasMany(Answer, {foreignKey: 'formId'});
-Answer.belongsTo(Form, {foreignKey: 'formId'});
-
-Question.hasMany(Answer, {foreignKey: 'questionId'});
+Question.hasMany(Answer, {foreignKey: 'questionId', onDelete: 'CASCADE'});
 Answer.belongsTo(Question, {foreignKey: 'questionId'});
 
 export default Answer;
