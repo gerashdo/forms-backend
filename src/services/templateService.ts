@@ -37,6 +37,7 @@ export const getTemplateById = async (id: number) => {
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
       {model: Topic, attributes: ['id', 'name']},
       {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
+      {model: User, as: 'allowedUsers', attributes: ['email', "name", "lastName"], through: {attributes: []}},
     ]
   });
   return template;
@@ -49,6 +50,7 @@ export const getTemplates = async (page: number, limit: number, orderBy: string,
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
       {model: Topic, attributes: ['id', 'name']},
       {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
+      {model: User, as: 'allowedUsers', attributes: ['email', "name", "lastName"], through: {attributes: []}},
     ],
     order: [[orderBy, order]],
     limit,

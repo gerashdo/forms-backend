@@ -17,6 +17,8 @@ class Template extends Model<InferAttributes<Template>, InferCreationAttributes<
 
   declare addTags: HasManyAddAssociationsMixin<Tag, 'id'>;
   declare setTags: HasManySetAssociationsMixin<Tag, number>;
+  declare addAllowedUsers: HasManyAddAssociationsMixin<User, number>;
+  declare setAllowedUsers: HasManySetAssociationsMixin<User, number>;
 }
 
 Template.init({
@@ -66,5 +68,8 @@ Tag.belongsToMany(Template, {through: 'TemplateTag'});
 
 Template.hasMany(Question, {foreignKey: 'templateId'});
 Question.belongsTo(Template, {foreignKey: 'templateId'});
+
+Template.belongsToMany(User, {through: 'TemplateAllowedUser', as: 'allowedUsers'});
+User.belongsToMany(Template, {through: 'TemplateAllowedUser', as: 'allowedTemplates'});
 
 export default Template;
