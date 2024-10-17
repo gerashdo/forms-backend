@@ -10,12 +10,19 @@ import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/temp
 
 export const createTemplate = async (templateData: TemplateRequestFields) => {
   const { tags, ...rest } = templateData;
-  const templateCreated = await Template.create(rest);
-  const templateTags = await Tag.findAll({where: {id: tags}});
-  await templateCreated.addTags(templateTags);
-  await createTwoBaseQuestions(templateCreated.id);
-  const template = await getTemplateById(templateCreated.id);
-  return template;
+  const transaction = await Template.sequelize.transaction();
+  try {
+    const templateCreated = await Template.create(rest, {transaction});
+    const templateTags = await Tag.findAll({where: {id: tags}});
+    await templateCreated.addTags(templateTags, {transaction});
+    await createTwoBaseQuestions(templateCreated, transaction);
+    await transaction.commit();
+    const template = await getTemplateById(templateCreated.id);
+    return template;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 }
 
 export const updateTemplate = async (templateId: number, templateData: Partial<TemplateRequestFields>) => {
@@ -67,6 +74,7 @@ export const addQuestionToTemplate = async (templateId: number, questionData: Qu
     const question = await Question.create({...questionData, sequence, templateId});
     return question;
   }catch(err) {
+    console.log('Error in addQuestionToTemplate');
     throw err;
   }
 }
