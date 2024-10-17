@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById, getTemplates } from "../services/templateService";
+import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById, getTemplates, updateTemplate } from "../services/templateService";
 import { updateQuestionsSequence } from "../services/questionService";
 import { handleControllerError } from "../helpers/errorHandler";
-import { deleteFile, uploadFile } from "../helpers/uploadFile";
-import { ALLOWED_IMAGE_EXTENSIONS, ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
+import { deleteFile } from "../helpers/uploadFile";
+import { ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
+import { getDataToUpdate, getImageForTemplate } from "../helpers/template/templateOperations";
 
 
 export const createTemplateController = async (req: Request, res: Response) => {
@@ -11,11 +12,31 @@ export const createTemplateController = async (req: Request, res: Response) => {
   const tags = JSON.parse(req.body.tags);
   let image: string | null = null;
   try {
-    if (req.files && req.files.image && !(req.files.image instanceof Array)) {
-      image = await uploadFile(req.files.image, ALLOWED_IMAGE_EXTENSIONS);
-    }
+    image = await getImageForTemplate(req);
     const template = await createTemplate({title, userId, description, topicId, isPublic, tags, image});
     res.status(201).json({
+      ok: true,
+      data: template,
+    });
+  } catch (error) {
+    handleControllerError(res, error);
+    if (image) {
+      deleteFile(image);
+      console.log('Image deleted');
+    }
+  }
+}
+
+export const updateTemplateController = async(req: Request, res: Response) => {
+  const {templateId} = req.params;
+  const {title, description, isPublic, topicId} = req.body;
+  const tags = req.body.tags ? JSON.parse(req.body.tags) : [];
+  let image: string | null = null;
+  try {
+    image = await getImageForTemplate(req)
+    const dataToUpdate = getDataToUpdate({title, description, isPublic, topicId, tags, image});
+    const template = await updateTemplate(Number(templateId), dataToUpdate);
+    res.status(200).json({
       ok: true,
       data: template,
     });

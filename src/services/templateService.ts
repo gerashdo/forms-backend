@@ -18,6 +18,18 @@ export const createTemplate = async (templateData: TemplateRequestFields) => {
   return template;
 }
 
+export const updateTemplate = async (templateId: number, templateData: Partial<TemplateRequestFields>) => {
+  const template = await Template.findByPk(templateId);
+  if (!template) throw new Error('Template not found');
+  await template.update(templateData);
+  if (templateData.tags) {
+    const templateTags = await Tag.findAll({where: {id: templateData.tags}});
+    await template.setTags(templateTags);
+  }
+  const updatedTemplate = await getTemplateById(templateId);
+  return updatedTemplate;
+}
+
 export const getTemplateById = async (id: number) => {
   const template = await Template.findByPk(id, {
     attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],

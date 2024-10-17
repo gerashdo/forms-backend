@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
 import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
@@ -33,6 +33,16 @@ router.post("/:templateId/questions",
   body("type").exists().isIn(Object.values(QuestionTypes)).withMessage(`Invalid question type. Valid types are: ${Object.values(QuestionTypes).join(", ")}`),
   checkValidations,
   addQuestionController
+)
+
+router.patch("/:templateId",
+  param("templateId").exists().isNumeric().custom(templateExists),
+  body("title").optional().isLength({min: 4}),
+  body("description").optional().isLength({min: 4}),
+  body("topicId").optional().isNumeric().custom(topicExists),
+  body("isPublic").optional().isBoolean(),
+  checkValidations,
+  updateTemplateController
 )
 
 router.get("/:templateId",
