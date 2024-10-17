@@ -66,7 +66,7 @@ Template.belongsTo(Topic, {foreignKey: 'topicId'});
 Template.belongsToMany(Tag, {through: 'TemplateTag'});
 Tag.belongsToMany(Template, {through: 'TemplateTag'});
 
-Template.hasMany(Question, {foreignKey: 'templateId'});
+Template.hasMany(Question, {foreignKey: 'templateId', onDelete: 'CASCADE'});
 Question.belongsTo(Template, {foreignKey: 'templateId'});
 
 Template.belongsToMany(User, {through: 'TemplateAllowedUser', as: 'allowedUsers'});

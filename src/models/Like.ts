@@ -30,7 +30,7 @@ Like.init({
   timestamps: false,
 })
 
-Template.hasMany(Like, {foreignKey: 'templateId'});
+Template.hasMany(Like, {foreignKey: 'templateId', onDelete: 'CASCADE'});
 Like.belongsTo(Template, {foreignKey: 'templateId'});
 
 User.hasMany(Like, {foreignKey: 'userId'});

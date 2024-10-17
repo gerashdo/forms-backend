@@ -35,7 +35,7 @@ Comment.init({
   timestamps: true,
 })
 
-Template.hasMany(Comment, {foreignKey: 'templateId'});
+Template.hasMany(Comment, {foreignKey: 'templateId', onDelete: 'CASCADE'});
 Comment.belongsTo(Template, {foreignKey: 'templateId'});
 
 User.hasMany(Comment, {foreignKey: 'userId'});
