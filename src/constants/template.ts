@@ -7,6 +7,6 @@ export enum ALLOWED_TEMPLATE_ORDER_BY_FIELDS {
 }
 
 export enum ALLOWED_TEMPLATE_ORDER_BY {
-  ASC = "ASC",
-  DESC = "DESC",
+  ASC = "asc",
+  DESC = "desc",
 }

@@ -1,8 +1,10 @@
 import sequelize from "../db/config"
-import { SubmitFormAnswer } from "../interfaces/form/form";
-import { QuestionTypes } from "../interfaces/template/question";
 import Answer from "../models/Answer";
 import Form from "../models/Form";
+import Template from "../models/Template";
+import User from "../models/User";
+import { SubmitFormAnswer } from "../interfaces/form/form";
+import { QuestionTypes } from "../interfaces/template/question";
 
 
 export const submitForm = async (
@@ -47,4 +49,30 @@ export const getForm = async (formId: number) => {
   });
 
   return form;
+}
+
+export const getForms = async (
+  page: number,
+  limit: number,
+  orderBy: string,
+  order: string,
+  templateId?: number,
+  userId?: number
+) => {
+  const where = {};
+  if (templateId) where['templateId'] = templateId;
+  if (userId) where['userId'] = userId;
+  const forms = await Form.findAndCountAll({
+    where,
+    attributes: ['id', 'submissionDate'],
+    include: [
+      {model: User, attributes: ['email']},
+      {model: Template, attributes: ['title']},
+    ],
+    offset: (page - 1) * limit,
+    limit,
+    order: [[orderBy, order]]
+  });
+
+  return forms;
 }
