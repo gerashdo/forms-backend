@@ -6,4 +6,5 @@ export type ApiPaths = {
   tags: "/tags",
   questions: "/questions",
   forms: "/forms",
+  answers: "/answers",
 }

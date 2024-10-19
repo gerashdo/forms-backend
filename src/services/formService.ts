@@ -1,3 +1,4 @@
+import { Includeable } from "sequelize";
 import sequelize from "../db/config"
 import Answer from "../models/Answer";
 import Form from "../models/Form";
@@ -38,14 +39,16 @@ export const submitForm = async (
   }
 }
 
-export const getForm = async (formId: number) => {
+export const getForm = async (formId: number, includeAnswers?: boolean) => {
+  const includeQuery: Includeable[] = [
+    {model: User, attributes: ['email', 'name', 'lastName']},
+    {model: Template, attributes: ['title', 'description']},
+  ];
+  if (includeAnswers) {
+    includeQuery.push({model: Answer, attributes: ['id', 'questionId', 'textValue', 'numberValue', 'booleanValue', 'multipleTextLineValue']});
+  }
   const form = await Form.findByPk(formId, {
-    include: [
-      {
-        model: Answer,
-        attributes: ['id', 'questionId', 'textValue', 'numberValue', 'booleanValue', 'multipleTextLineValue']  // Specify the fields you want from the Answer
-      }
-    ]
+    include: includeQuery,
   });
 
   return form;

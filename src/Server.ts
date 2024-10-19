@@ -1,18 +1,19 @@
-import express, { Express } from "express"
-import cors from "cors"
-import sequalize from "./db/config"
-import authRouter from "./routes/authRoutes"
-import templateRouter from "./routes/templateRoutes"
-import topicRouter from "./routes/topicRoutes"
-import tagRouter from "./routes/tagRoutes"
-import questionRouter from "./routes/questionRoutes"
-import formRouter from "./routes/formRoutes"
-import { ApiPaths } from "./interfaces/utils"
-import { notFound } from "./controllers/404"
-import { createBaseTopics } from "./scripts/topics"
-import { createBaseUsers } from "./scripts/users"
-import { createBaseTemplate } from "./scripts/templates"
-import { createBaseTags } from "./scripts/tags"
+import express, { Express } from "express";
+import cors from "cors";
+import sequalize from "./db/config";
+import authRouter from "./routes/authRoutes";
+import templateRouter from "./routes/templateRoutes";
+import topicRouter from "./routes/topicRoutes";
+import tagRouter from "./routes/tagRoutes";
+import questionRouter from "./routes/questionRoutes";
+import formRouter from "./routes/formRoutes";
+import anwerRouter from "./routes/answerRoutes";
+import { ApiPaths } from "./interfaces/utils";
+import { notFound } from "./controllers/404";
+import { createBaseTopics } from "./scripts/topics";
+import { createBaseUsers } from "./scripts/users";
+import { createBaseTemplate } from "./scripts/templates";
+import { createBaseTags } from "./scripts/tags";
 
 
 export class Server {
@@ -32,6 +33,7 @@ export class Server {
       topics: "/topics",
       questions: "/questions",
       forms: "/forms",
+      answers: "/answers",
     }
     this.connectDB()
     this.syncDB()
@@ -79,6 +81,7 @@ export class Server {
     this.app.use(`${this.basePath}${this.paths.tags}`, tagRouter)
     this.app.use(`${this.basePath}${this.paths.questions}`, questionRouter)
     this.app.use(`${this.basePath}${this.paths.forms}`, formRouter)
+    this.app.use(`${this.basePath}${this.paths.answers}`, anwerRouter)
     this.app.get('*', notFound)
   }
 
