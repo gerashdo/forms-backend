@@ -1,3 +1,4 @@
+import Answer from "../../models/Answer";
 import Form from "../../models/Form";
 import Question from "../../models/Question";
 import Template from "../../models/Template";
@@ -44,5 +45,12 @@ export const formExists = async (id: number) => {
   const form = await Form.findByPk(id);
   if (!form) {
     throw new Error('Form not found');
+  }
+}
+
+export const answerExists = async (id: number) => {
+  const answer = await Answer.findByPk(id);
+  if (!answer) {
+    throw new Error('Answer not found');
   }
 }
