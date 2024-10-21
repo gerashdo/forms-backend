@@ -50,8 +50,18 @@ export const getTemplateById = async (id: number) => {
   return template;
 }
 
-export const getTemplates = async (page: number, limit: number, orderBy: string, order: string) => {
+export const getTemplates = async (
+  page: number,
+  limit: number,
+  orderBy: string,
+  order: string,
+  userId?: number
+) => {
+  const where = {};
+  if (userId) where['userId'] = userId;
+
   const templates = await Template.findAndCountAll({
+    where,
     attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
     include: [
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
@@ -59,9 +69,9 @@ export const getTemplates = async (page: number, limit: number, orderBy: string,
       {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
       {model: User, as: 'allowedUsers', attributes: ['email', "name", "lastName"], through: {attributes: []}},
     ],
-    order: [[orderBy, order]],
-    limit,
     offset: (page - 1) * limit,
+    limit,
+    order: [[orderBy, order]],
   });
   return templates;
 }

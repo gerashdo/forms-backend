@@ -58,6 +58,7 @@ router.get("/",
     .withMessage(`Invalid value for orderBy. Valid values are: ${Object.values(ALLOWED_TEMPLATE_ORDER_BY_FIELDS).join(", ")}`),
   query("order").optional().isString().isIn(Object.values(ALLOWED_TEMPLATE_ORDER_BY))
     .withMessage(`Invalid value for order. Valid values are: ${Object.values(ALLOWED_TEMPLATE_ORDER_BY).join(", ")}`),
+  query("userId").optional().isNumeric().custom(userExists),
   checkValidations,
   getTemplatesController
 )

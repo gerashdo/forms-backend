@@ -68,10 +68,17 @@ export const getTemplatesController = async(req: Request, res: Response) => {
     page = 1,
     limit = 10,
     orderBy = ALLOWED_TEMPLATE_ORDER_BY_FIELDS.createdAt,
-    order = ALLOWED_TEMPLATE_ORDER_BY.DESC
+    order = ALLOWED_TEMPLATE_ORDER_BY.DESC,
+    userId,
   } = req.query;
   try {
-    const templates = await getTemplates(Number(page), Number(limit), String(orderBy), String(order));
+    const templates = await getTemplates(
+      Number(page),
+      Number(limit),
+      String(orderBy),
+      String(order),
+      userId ? Number(userId) : undefined
+    );
     res.status(200).json({
       ok: true,
       data: templates.rows,
