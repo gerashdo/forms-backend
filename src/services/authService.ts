@@ -26,7 +26,7 @@ export const getUsers = async (
   order: ALLOWED_USER_ORDER_BY,
 ) => {
   const users = await User.findAndCountAll({
-    attributes: ['id', 'name', 'lastName', 'email', 'role'],
+    attributes: ['id', 'name', 'lastName', 'email', 'role', 'blocked'],
     limit: limit,
     offset: (page - 1) * limit,
     order: [[orderBy, order]],

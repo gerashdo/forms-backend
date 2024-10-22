@@ -12,6 +12,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare role: CreationOptional<UserRoles>;
+  declare blocked: CreationOptional<boolean>;
 }
 
 User.init({
@@ -41,6 +42,11 @@ User.init({
     type: DataTypes.ENUM(UserRoles.USER, UserRoles.ADMIN),
     allowNull: false,
     defaultValue: UserRoles.USER,
+  },
+  blocked: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
   },
   createdAt: DataTypes.DATE,
   updatedAt: DataTypes.DATE,
