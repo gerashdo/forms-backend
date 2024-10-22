@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
-import { getUsersController, loginController, signUpController, updateUserController } from "../controllers/authController";
+import { getUserByIdController, getUsersController, loginController, signUpController, updateUserController } from "../controllers/authController";
 import { checkValidations, emailExists, isEmailUnique, isUserAdmin } from "../middlewares/userValidations";
 import { validateJWT } from "../middlewares/validateJwt";
 import { userExists } from "../helpers/validators/utils";
@@ -26,6 +26,14 @@ router.post("/login",
   checkValidations,
   emailExists,
   loginController
+)
+
+router.get("/users/:id",
+  validateJWT,
+  isUserAdmin,
+  param("id").isNumeric().custom(userExists),
+  checkValidations,
+  getUserByIdController
 )
 
 router.get("/users",
