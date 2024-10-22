@@ -3,6 +3,7 @@ import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
 import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
+import { validateJWT } from "../middlewares/validateJwt";
 import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
 import { ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
@@ -16,6 +17,7 @@ router.use(fileUpload({
 }))
 
 router.post("/",
+  validateJWT,
   body("title").exists().isLength({min: 4}),
   body("userId").exists().isNumeric().custom(userExists),
   body("description").exists().isLength({min: 4}),
@@ -26,9 +28,10 @@ router.post("/",
 )
 
 router.post("/:templateId/questions",
+  validateJWT,
   param("templateId").exists().isNumeric().custom(templateExists),
-  body("title").exists().isLength({min: 4}),
-  body("description").optional().isLength({min: 4}),
+  body("title").exists().isLength({min: 1}),
+  body("description").optional().isLength({min: 1}),
   body("visible").optional().isBoolean(),
   body("type").exists().isIn(Object.values(QuestionTypes)).withMessage(`Invalid question type. Valid types are: ${Object.values(QuestionTypes).join(", ")}`),
   checkValidations,
@@ -36,9 +39,10 @@ router.post("/:templateId/questions",
 )
 
 router.patch("/:templateId",
+  validateJWT,
   param("templateId").exists().isNumeric().custom(templateExists),
-  body("title").optional().isLength({min: 4}),
-  body("description").optional().isLength({min: 4}),
+  body("title").optional().isLength({min: 1}),
+  body("description").optional().isLength({min: 1}),
   body("topicId").optional().isNumeric().custom(topicExists),
   body("isPublic").optional().isBoolean(),
   checkValidations,
@@ -64,6 +68,7 @@ router.get("/",
 )
 
 router.delete("/:templateId/questions/:questionId",
+  validateJWT,
   param("templateId").exists().isNumeric().custom(templateExists),
   param("questionId").exists().isNumeric().custom(questionExists),
   checkValidations,
@@ -71,6 +76,7 @@ router.delete("/:templateId/questions/:questionId",
 )
 
 router.patch("/:templateId/reorder-questions",
+  validateJWT,
   param("templateId").exists().isNumeric().custom(templateExists),
   body("questionsOrder").exists().isArray({min: 1})
     .withMessage("Questions order must be an array with at least one element")

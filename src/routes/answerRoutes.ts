@@ -4,6 +4,7 @@ import { getAnswersController, updateAnswerController } from "../controllers/ans
 import { checkValidations } from "../middlewares/userValidations";
 import { validateAnswerType } from "../middlewares/answer";
 import { answerExists, formExists } from "../helpers/validators/utils";
+import { validateJWT } from "../middlewares/validateJwt";
 
 
 const router = Router();
@@ -15,6 +16,7 @@ router.get("/",
 )
 
 router.patch("/:answerId",
+  validateJWT,
   param("answerId").isNumeric().custom(answerExists),
   body("value").exists(),
   checkValidations,
