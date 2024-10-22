@@ -1,6 +1,7 @@
 import User from "../models/User";
 import { comparePassword, encryptPassword } from "../helpers/passwordEncrypt";
 import { generateJWT } from "../helpers/auth/jwtoken";
+import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user";
 
 
 export const loginUser = async (email: string, password: string) => {
@@ -16,6 +17,22 @@ export const registerUser = async (name: string, lastName: string, email: string
   const encryptedPassword = encryptPassword(password);
   const user = await User.create({name, lastName, email, password: encryptedPassword});
   return user
+}
+
+export const getUsers = async (
+  page: number,
+  limit: number,
+  orderBy: ALLOWED_USER_ORDER_BY_FIELDS,
+  order: ALLOWED_USER_ORDER_BY,
+) => {
+  const users = await User.findAndCountAll({
+    attributes: ['id', 'name', 'lastName', 'email', 'role'],
+    limit: limit,
+    offset: (page - 1) * limit,
+    order: [[orderBy, order]],
+  })
+
+  return users;
 }
 
 export const renovateToken = async( user: User ) => {

@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response,  } from "express";
 import { validationResult } from "express-validator";
 import User from "../models/User";
+import { CustomRequest } from "../interfaces/auth/token";
+import { UserRoles } from "../interfaces/auth/roles";
 
 
 export const isEmailUnique = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,6 +39,18 @@ export const checkValidations = (req: Request, res: Response, next: NextFunction
       errors: errors.mapped()
     });
   }else{
+    next();
+  }
+}
+
+export const isUserAdmin = async (req: CustomRequest, res: Response, next: NextFunction) => {
+  const user = req.user;
+  if(!user || user.role !== UserRoles.ADMIN){
+    res.status(403).json({
+      ok: false,
+      errors: {role: {msg: 'You are not allowed to perform this action'}}
+    });
+  } else {
     next();
   }
 }
