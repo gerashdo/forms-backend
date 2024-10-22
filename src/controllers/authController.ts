@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { getUsers, loginUser, registerUser } from "../services/authService";
+import { getUsers, loginUser, registerUser, updateUser } from "../services/authService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user";
+import { PatchUserBody } from "../interfaces/auth/user";
 
 
 export const loginController = async(req: Request, res: Response) => {
@@ -67,6 +68,20 @@ export const getUsersController = async(req: Request, res: Response) => {
           elementsPerPage: Number(limit),
           totalPages: Math.ceil(result.count / Number(limit)),
         }
+      });
+  } catch (error) {
+      handleControllerError(res, error);
+  }
+}
+
+export const updateUserController = async(req: Request, res: Response) => {
+  const {id} = req.params;
+  const data: PatchUserBody = req.body;
+  try {
+      const user = await updateUser(Number(id), data);
+      res.status(200).json({
+        ok: true,
+        data: user,
       });
   } catch (error) {
       handleControllerError(res, error);

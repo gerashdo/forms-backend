@@ -1,16 +1,18 @@
-import { Router } from "express"
-import { body, query } from "express-validator"
-import { getUsersController, loginController, signUpController } from "../controllers/authController"
-import { checkValidations, emailExists, isEmailUnique, isUserAdmin } from "../middlewares/userValidations"
-import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user"
-import { validateJWT } from "../middlewares/validateJwt"
+import { Router } from "express";
+import { body, param, query } from "express-validator";
+import { getUsersController, loginController, signUpController, updateUserController } from "../controllers/authController";
+import { checkValidations, emailExists, isEmailUnique, isUserAdmin } from "../middlewares/userValidations";
+import { validateJWT } from "../middlewares/validateJwt";
+import { userExists } from "../helpers/validators/utils";
+import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user";
+import { UserRoles } from "../interfaces/auth/roles";
 
 
 const router = Router()
 
 router.post("/signup",
-  body("name").exists().isLength({min: 3}),
-  body("lastName").exists().isLength({min: 3}),
+  body("name").exists().isLength({min: 1}),
+  body("lastName").exists().isLength({min: 1}),
   body("email").isEmail(),
   body("password").exists().isLength({min: 6}),
   checkValidations,
@@ -38,4 +40,18 @@ router.get("/users",
   getUsersController
 )
 
-export default router
+router.patch("/users/:id",
+  validateJWT,
+  isUserAdmin,
+  param("id").isNumeric().custom(userExists),
+  body("name").optional().isLength({min: 1}),
+  body("lastName").optional().isLength({min: 1}),
+  body("email").optional().isEmail(),
+  body("role").optional().isString().isIn(Object.values(UserRoles))
+    .withMessage(`Invalid role. Allowed values: ${Object.values(UserRoles).join(", ")}`),
+  body("blocked").optional().isBoolean(),
+  checkValidations,
+  updateUserController
+)
+
+export default router;

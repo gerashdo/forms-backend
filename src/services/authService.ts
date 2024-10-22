@@ -2,6 +2,7 @@ import User from "../models/User";
 import { comparePassword, encryptPassword } from "../helpers/passwordEncrypt";
 import { generateJWT } from "../helpers/auth/jwtoken";
 import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user";
+import { PatchUserBody } from "../interfaces/auth/user";
 
 
 export const loginUser = async (email: string, password: string) => {
@@ -33,6 +34,21 @@ export const getUsers = async (
   })
 
   return users;
+}
+
+export const getUserById = async (id: number) => {
+  const user = await User.findByPk(id, {
+    attributes: ['id', 'name', 'lastName', 'email', 'role', 'blocked']
+  });
+  return user;
+}
+
+export const updateUser = async (id: number, data: PatchUserBody) => {
+  const user = await getUserById(id);
+  if (!user) throw new Error("User not found");
+
+  await user.update(data);
+  return user;
 }
 
 export const renovateToken = async( user: User ) => {
