@@ -27,7 +27,6 @@ export const deleteFile = (fileUrl: string): Promise<boolean> => {
       const nameArr = fileUrl.split('/');
       const name = nameArr[ nameArr.length - 1 ];
       const [ public_id ] = name.split('.');
-      console.error({public_id});
       cloudinary.uploader.destroy(public_id, (err) => {
         if (err) {
           console.error(err);

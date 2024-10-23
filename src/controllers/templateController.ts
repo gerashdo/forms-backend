@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, getTemplateById, getTemplates, updateTemplate } from "../services/templateService";
+import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, deleteTemplate, getTemplateById, getTemplates, updateTemplate } from "../services/templateService";
 import { updateQuestionsSequence } from "../services/questionService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { deleteFile } from "../helpers/uploadFile";
@@ -49,20 +49,6 @@ export const updateTemplateController = async(req: Request, res: Response) => {
   }
 }
 
-export const addQuestionController = async(req: Request, res: Response) => {
-  const {templateId} = req.params;
-  const {title, description, visible, type} = req.body;
-  try {
-    const question = await addQuestionToTemplate(Number(templateId), {title, description, visible, type});
-    res.status(201).json({
-      ok: true,
-      data: question,
-    });
-  } catch (error) {
-    handleControllerError(res, error);
-  }
-}
-
 export const getTemplatesController = async(req: Request, res: Response) => {
   const {
     page = 1,
@@ -100,6 +86,30 @@ export const getTemplateByIdController = async(req: Request, res: Response) => {
     res.status(200).json({
       ok: true,
       data: template,
+    });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const deleteTemplateController = async(req: Request, res: Response) => {
+  const {templateId} = req.params;
+  try {
+    await deleteTemplate(Number(templateId));
+    res.status(204).json({});
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const addQuestionController = async(req: Request, res: Response) => {
+  const {templateId} = req.params;
+  const {title, description, visible, type} = req.body;
+  try {
+    const question = await addQuestionToTemplate(Number(templateId), {title, description, visible, type});
+    res.status(201).json({
+      ok: true,
+      data: question,
     });
   } catch (error) {
     handleControllerError(res, error);

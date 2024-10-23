@@ -6,6 +6,7 @@ import User from "../models/User";
 import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
 import { createTwoBaseQuestions, reorderQuestionsAfterDelete } from "../helpers/template/templateOperations";
 import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
+import { deleteFile } from "../helpers/uploadFile";
 
 
 export const createTemplate = async (templateData: TemplateRequestFields) => {
@@ -74,6 +75,16 @@ export const getTemplates = async (
     order: [[orderBy, order]],
   });
   return templates;
+}
+
+export const deleteTemplate = async (id: number) => {
+  const template = await Template.findByPk(id);
+  if (!template) throw new Error('Template not found');
+  if (template.image) {
+    const result = await deleteFile(template.image);
+    if (!result) throw new Error('Error deleting image');
+  }
+  await template.destroy();
 }
 
 export const addQuestionToTemplate = async (templateId: number, questionData: QuestionRequestFields) => {

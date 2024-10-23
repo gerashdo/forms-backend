@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, deleteTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
 import { validateJWT } from "../middlewares/validateJwt";
+import { isAdminOrTemplateOwner } from "../middlewares/templateValidations";
 import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
 import { ALLOWED_TEMPLATE_ORDER_BY, ALLOWED_TEMPLATE_ORDER_BY_FIELDS } from "../constants/template";
@@ -25,17 +26,6 @@ router.post("/",
   body("isPublic").optional().isBoolean(),
   checkValidations,
   createTemplateController
-)
-
-router.post("/:templateId/questions",
-  validateJWT,
-  param("templateId").exists().isNumeric().custom(templateExists),
-  body("title").exists().isLength({min: 1}),
-  body("description").optional().isLength({min: 1}),
-  body("visible").optional().isBoolean(),
-  body("type").exists().isIn(Object.values(QuestionTypes)).withMessage(`Invalid question type. Valid types are: ${Object.values(QuestionTypes).join(", ")}`),
-  checkValidations,
-  addQuestionController
 )
 
 router.patch("/:templateId",
@@ -65,6 +55,25 @@ router.get("/",
   query("userId").optional().isNumeric().custom(userExists),
   checkValidations,
   getTemplatesController
+)
+
+router.delete("/:templateId",
+  validateJWT,
+  param("templateId").exists().isNumeric().custom(templateExists),
+  checkValidations,
+  isAdminOrTemplateOwner,
+  deleteTemplateController
+)
+
+router.post("/:templateId/questions",
+  validateJWT,
+  param("templateId").exists().isNumeric().custom(templateExists),
+  body("title").exists().isLength({min: 1}),
+  body("description").optional().isLength({min: 1}),
+  body("visible").optional().isBoolean(),
+  body("type").exists().isIn(Object.values(QuestionTypes)).withMessage(`Invalid question type. Valid types are: ${Object.values(QuestionTypes).join(", ")}`),
+  checkValidations,
+  addQuestionController
 )
 
 router.delete("/:templateId/questions/:questionId",
