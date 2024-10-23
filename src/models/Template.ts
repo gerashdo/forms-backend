@@ -1,9 +1,10 @@
-import { CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationsMixin, HasManySetAssociationsMixin, InferAttributes, InferCreationAttributes, Model } from "sequelize";
+import { Association, CreationOptional, DataTypes, ForeignKey, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManySetAssociationsMixin, InferAttributes, InferCreationAttributes, Model, NonAttribute } from "sequelize";
 import sequelize from '../db/config';
 import Topic from "./Topic";
 import Tag from "./Tag";
 import User from "./User";
 import Question from "./Question";
+import Form from "./Form";
 
 
 class Template extends Model<InferAttributes<Template>, InferCreationAttributes<Template>> {
@@ -15,10 +16,17 @@ class Template extends Model<InferAttributes<Template>, InferCreationAttributes<
   declare image: CreationOptional<string>;
   declare isPublic: boolean;
 
+  declare forms?: NonAttribute<Form[]>;
+
   declare addTags: HasManyAddAssociationsMixin<Tag, 'id'>;
   declare setTags: HasManySetAssociationsMixin<Tag, number>;
   declare addAllowedUsers: HasManyAddAssociationsMixin<User, number>;
   declare setAllowedUsers: HasManySetAssociationsMixin<User, number>;
+  declare countForms: HasManyCountAssociationsMixin;
+
+  declare static associations: {
+    forms: Association<Template, Form>;
+  };
 }
 
 Template.init({

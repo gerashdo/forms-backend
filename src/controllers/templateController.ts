@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, deleteTemplate, getTemplateById, getTemplates, updateTemplate } from "../services/templateService";
+import { addQuestionToTemplate, createTemplate, deleteQuestionFromTemplate, deleteTemplate, getTemplateById, getTemplates, getTemplatesBySubmissions, updateTemplate } from "../services/templateService";
 import { updateQuestionsSequence } from "../services/questionService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { deleteFile } from "../helpers/uploadFile";
@@ -73,6 +73,19 @@ export const getTemplatesController = async(req: Request, res: Response) => {
         page: Number(page),
         elementsPerPage: Number(limit),
       }
+    });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const getTemplatesBySubmissionsController = async(req: Request, res: Response) => {
+  const {limit = 10, order = ALLOWED_TEMPLATE_ORDER_BY.DESC} = req.query;
+  try {
+    const templates = await getTemplatesBySubmissions(Number(limit), String(order));
+    res.status(200).json({
+      ok: true,
+      data: templates,
     });
   } catch (error) {
     handleControllerError(res, error);

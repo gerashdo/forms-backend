@@ -1,10 +1,13 @@
+import sequelize from "../db/config";
 import Question from "../models/Question";
 import Tag from "../models/Tag";
 import Template from "../models/Template";
 import Topic from "../models/Topic";
 import User from "../models/User";
+import Form from "../models/Form";
 import { getNextQuestionSequenceNumber } from "../helpers/template/metadata";
 import { createTwoBaseQuestions, reorderQuestionsAfterDelete } from "../helpers/template/templateOperations";
+import { TEMPLATE_FIELDS_TO_RETURN } from "../constants/template";
 import { QuestionRequestFields, TemplateRequestFields } from "../interfaces/template/template";
 import { deleteFile } from "../helpers/uploadFile";
 
@@ -40,12 +43,13 @@ export const updateTemplate = async (templateId: number, templateData: Partial<T
 
 export const getTemplateById = async (id: number) => {
   const template = await Template.findByPk(id, {
-    attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
+    attributes: TEMPLATE_FIELDS_TO_RETURN,
     include: [
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
       {model: Topic, attributes: ['id', 'name']},
       {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
       {model: User, as: 'allowedUsers', attributes: ['email', "name", "lastName"], through: {attributes: []}},
+      {model: Form, attributes: ['id', 'submissionDate']},
     ]
   });
   return template;
@@ -63,7 +67,7 @@ export const getTemplates = async (
 
   const templates = await Template.findAndCountAll({
     where,
-    attributes: ['id', 'title', 'description', 'image', 'isPublic', 'createdAt'],
+    attributes: TEMPLATE_FIELDS_TO_RETURN,
     include: [
       {model: User, attributes: ['id', 'name', 'lastName', 'email']},
       {model: Topic, attributes: ['id', 'name']},
@@ -74,6 +78,25 @@ export const getTemplates = async (
     limit,
     order: [[orderBy, order]],
   });
+  return templates;
+}
+
+export const getTemplatesBySubmissions = async (limit: number, order: string) => {
+  const templates = await Template.findAll({
+    include: [
+      {model: Topic, attributes: ['id', 'name']},
+      {model: Tag, attributes: ['id', 'name'], through: {attributes: []}},
+      {model: Form, attributes: [], as: 'Forms', required: true, duplicating: false},
+    ],
+    attributes: [
+      ...TEMPLATE_FIELDS_TO_RETURN,
+      [sequelize.fn('COUNT', sequelize.col('Forms.id')), 'submissions'],
+    ],
+    group: ['Template.id'],
+    order: [[sequelize.literal('submissions'), order]],
+    limit,
+  })
+
   return templates;
 }
 

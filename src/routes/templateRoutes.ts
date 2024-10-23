@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
-import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, deleteTemplateController, getTemplateByIdController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
+import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, deleteTemplateController, getTemplateByIdController, getTemplatesBySubmissionsController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
 import { checkValidations } from "../middlewares/userValidations";
 import { validateJWT } from "../middlewares/validateJwt";
 import { isAdminOrTemplateOwner } from "../middlewares/templateValidations";
@@ -37,6 +37,14 @@ router.patch("/:templateId",
   body("isPublic").optional().isBoolean(),
   checkValidations,
   updateTemplateController
+)
+
+router.get("/bysubmissions",
+  query("limit").optional().isNumeric(),
+  query("order").optional().isString().isIn(Object.values(ALLOWED_TEMPLATE_ORDER_BY))
+    .withMessage(`Invalid value for order. Valid values are: ${Object.values(ALLOWED_TEMPLATE_ORDER_BY).join(", ")}`),
+  checkValidations,
+  getTemplatesBySubmissionsController
 )
 
 router.get("/:templateId",
