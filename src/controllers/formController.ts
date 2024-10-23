@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getForm, getForms, submitForm } from "../services/formService";
+import { deleteForm, getForm, getForms, submitForm } from "../services/formService";
 import { handleControllerError } from "../helpers/errorHandler";
 import { SubmitFormBody } from "../interfaces/form/form";
 import { ALLOWED_FORM_ORDER_BY, ALLOWED_FORM_ORDER_BY_FIELDS } from "../constants/form";
@@ -58,6 +58,16 @@ export const getFormsController = async (req: Request, res: Response) => {
         elementsPerPage: Number(limit),
       }
     });
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const deleteFormController = async (req: Request, res: Response) => {
+  const {formId} = req.params;
+  try {
+    await deleteForm(Number(formId));
+    res.status(204).end();
   } catch (error) {
     handleControllerError(res, error);
   }

@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { getFormByIdController, getFormsController, submitFormController } from "../controllers/formController";
+import { deleteFormController, getFormByIdController, getFormsController, submitFormController } from "../controllers/formController";
 import { body, param, query } from "express-validator";
 import { formExists, templateExists, userExists } from "../helpers/validators/utils";
 import { checkValidations } from "../middlewares/userValidations";
-import { allQuestionsExist, formAlreadySubmitted, verifyAllQuestionsAnswered } from "../middlewares/formValidations";
+import { allQuestionsExist, formAlreadySubmitted, isAdminOrFormOwner, verifyAllQuestionsAnswered } from "../middlewares/formValidations";
 import { QuestionTypes } from "../interfaces/template/question";
 import { ALLOWED_FORM_ORDER_BY, ALLOWED_FORM_ORDER_BY_FIELDS } from "../constants/form";
 import { validateJWT } from "../middlewares/validateJwt";
@@ -44,6 +44,14 @@ router.get("/:formId",
   param("formId").isNumeric().custom(formExists),
   checkValidations,
   getFormByIdController
+);
+
+router.delete("/:formId",
+  validateJWT,
+  param("formId").isNumeric().custom(formExists),
+  checkValidations,
+  isAdminOrFormOwner,
+  deleteFormController
 );
 
 export default router;

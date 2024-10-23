@@ -79,3 +79,9 @@ export const getForms = async (
 
   return forms;
 }
+
+export const deleteForm = async (formId: number) => {
+  const form = await Form.findByPk(formId);
+  if (!form) throw new Error('Form not found');
+  await form.destroy();
+}
