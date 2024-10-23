@@ -6,10 +6,13 @@ import { checkValidations } from "../middlewares/userValidations";
 import { allQuestionsExist, formAlreadySubmitted, verifyAllQuestionsAnswered } from "../middlewares/formValidations";
 import { QuestionTypes } from "../interfaces/template/question";
 import { ALLOWED_FORM_ORDER_BY, ALLOWED_FORM_ORDER_BY_FIELDS } from "../constants/form";
+import { validateJWT } from "../middlewares/validateJwt";
+
 
 const router = Router();
 
 router.post("/submit",
+  validateJWT,
   body("userId").exists().isNumeric().custom(userExists),
   body("templateId").exists().isNumeric().custom(templateExists),
   body("answers").exists().isArray().notEmpty(),

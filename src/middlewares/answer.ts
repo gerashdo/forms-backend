@@ -1,8 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
 import Answer from '../models/Answer';
 import Question from '../models/Question';
+import Form from '../models/Form';
 import { handleControllerError } from '../helpers/errorHandler';
 import { QuestionTypes } from '../interfaces/template/question';
+import { CustomRequest } from '../interfaces/auth/token';
+import { UserRoles } from '../interfaces/auth/roles';
 
 
 export const validateAnswerType = async (req: Request, res: Response, next: NextFunction) => {
@@ -26,6 +29,30 @@ export const validateAnswerType = async (req: Request, res: Response, next: Next
       res.status(422).json({
         ok: false,
         errors: {value: {msg: 'The type of the value does not match the question type'}},
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    handleControllerError(res, error);
+  }
+}
+
+export const isAdminOrAnswerOwner = async (req: CustomRequest, res: Response, next: NextFunction) => {
+  const user = req.user;
+  const {answerId} = req.params;
+  try {
+    const answer = await Answer.findByPk(Number(answerId));
+    const form = await Form.findByPk(answer.formId);
+    if (!answer || !form) {
+      res.status(404).json({
+        ok: false,
+        errors: {answerId: {msg: 'Answer not found'}},
+      });
+    } else if (user.role !== UserRoles.ADMIN && form.userId !== user.id) {
+      res.status(403).json({
+        ok: false,
+        errors: {role: {msg: 'You are not allowed to perform this action'}},
       });
     } else {
       next();
