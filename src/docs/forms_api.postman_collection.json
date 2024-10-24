@@ -1,0 +1,599 @@
+{
+	"info": {
+		"_postman_id": "ed587588-a88e-4060-8854-992d4eaec48f",
+		"name": "forms api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "19175885"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Rosa\",\n    \"lastName\": \"Perez Perez\",\n    \"email\": \"rosa@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/auth/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Get users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4",
+								"type": "text"
+							}
+						],
+						"url": "{{url}}/api/v1/auth/users"
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"blocked\": \"false\",\n    \"role\": \"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/auth/users/2"
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "{{url}}/api/v1/auth/users/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Templates",
+			"item": [
+				{
+					"name": "Create template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "topicId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "title",
+									"value": "fourth Template",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is the description",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "tags",
+									"value": "[\"1\"]",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/gerashdo/Downloads/Logo-HD.JPG",
+									"disabled": true
+								}
+							]
+						},
+						"url": "{{url}}/api/v1/templates"
+					},
+					"response": []
+				},
+				{
+					"name": "Update template",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "topicId",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "title",
+									"value": "Template 1",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is the description",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "isPublic",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "tags",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/gerashdo/Downloads/Logo-HD.JPG",
+									"disabled": true
+								}
+							]
+						},
+						"url": "{{url}}/api/v1/templates/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Question",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Whats your name\",\n    \"description\": \"Question to know the users name\",\n    \"type\": \"text\",\n    \"visible\": \"true\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/templates/1/questions"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Template",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/v1/templates/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Question",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/api/v1/templates/3/questions/7"
+					},
+					"response": []
+				},
+				{
+					"name": "Reorder questions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"questionsOrder\": [\"9\", \"12\",\"11\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/templates/3/reorder-questions"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Templates",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/templates?orderBy=createdAt&order=desc&limit=10&page=1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"templates"
+							],
+							"query": [
+								{
+									"key": "orderBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "userId",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Template",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIzIiwiaWF0IjoxNzI5NjQ3NDU0LCJleHAiOjE3Mjk5MDY2NTR9.FY1LnzrNy8CeqhyYdWsWaKlXr05y_pnQuSycJ7g0PGc"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/api/v1/templates/5"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Templates by submissions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/v1/templates/bysubmissions"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Topics",
+			"item": [
+				{
+					"name": "Get all topics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/v1/topics"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Get all tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/v1/tags"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Questions",
+			"item": [
+				{
+					"name": "Get questions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/questions?templateId=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"questions"
+							],
+							"query": [
+								{
+									"key": "templateId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Question",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Firstt Question\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/questions/12"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Forms",
+			"item": [
+				{
+					"name": "Submit Form",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIxIiwiaWF0IjoxNzI5NjE4NDk3LCJleHAiOjE3Mjk4Nzc2OTd9.mgYEyHGtJuwTdjDFUjJfREnwkxlBk4bMIoCmZhSyTa4"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"templateId\": 4,\n    \"userId\": 1,\n    \"answers\": [\n        {\n            \"questionId\": 13,\n            \"value\": \"john@gmail.com\",\n            \"type\": \"text\"\n        },\n        {\n            \"questionId\": 14,\n            \"value\": \"John Doe\",\n            \"type\": \"text\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/forms/submit"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Form",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/v1/forms/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Forms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/forms?templateId=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"forms"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "orderBy",
+									"value": "submissionDate",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"disabled": true
+								},
+								{
+									"key": "templateId",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete form",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIzIiwiaWF0IjoxNzI5NjQ3NDU0LCJleHAiOjE3Mjk5MDY2NTR9.FY1LnzrNy8CeqhyYdWsWaKlXr05y_pnQuSycJ7g0PGc"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{url}}/api/v1/forms/1"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Answers",
+			"item": [
+				{
+					"name": "Get Answers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/v1/answers?formId=4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"answers"
+							],
+							"query": [
+								{
+									"key": "formId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Answer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiIyIiwiaWF0IjoxNzI5NjQ1OTExLCJleHAiOjE3Mjk5MDUxMTF9.VFXkhQvCq5c2csA4RcNOhw3bxkavgMPOkq-V0g_TM_M"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"21\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{url}}/api/v1/answers/3"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
