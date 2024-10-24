@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { getQuestionsController, updateQuestionController } from "../controllers/questionController";
-import { checkValidations } from "../middlewares/userValidations";
+import { checkValidations, isUserBlocked } from "../middlewares/userValidations";
 import { questionExists, templateExists } from "../helpers/validators/utils";
 import { QuestionTypes } from "../interfaces/template/question";
+import { validateJWT } from "../middlewares/validateJwt";
+import { isAdminOrQuestionOwner } from "../middlewares/question";
 
 const router = Router();
 
@@ -14,6 +16,9 @@ router.get("/",
 )
 
 router.patch("/:questionId",
+  validateJWT,
+  isUserBlocked,
+  isAdminOrQuestionOwner,
   param("questionId").isNumeric().custom(questionExists),
   body("title").optional().isLength({min: 4}),
   body("description").optional().isLength({min: 4}),

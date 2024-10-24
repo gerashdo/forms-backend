@@ -2,7 +2,7 @@ import { Router } from "express";
 import { deleteFormController, getFormByIdController, getFormsController, submitFormController } from "../controllers/formController";
 import { body, param, query } from "express-validator";
 import { formExists, templateExists, userExists } from "../helpers/validators/utils";
-import { checkValidations } from "../middlewares/userValidations";
+import { checkValidations, isUserBlocked } from "../middlewares/userValidations";
 import { allQuestionsExist, formAlreadySubmitted, isAdminOrFormOwner, verifyAllQuestionsAnswered } from "../middlewares/formValidations";
 import { QuestionTypes } from "../interfaces/template/question";
 import { ALLOWED_FORM_ORDER_BY, ALLOWED_FORM_ORDER_BY_FIELDS } from "../constants/form";
@@ -13,6 +13,7 @@ const router = Router();
 
 router.post("/submit",
   validateJWT,
+  isUserBlocked,
   body("userId").exists().isNumeric().custom(userExists),
   body("templateId").exists().isNumeric().custom(templateExists),
   body("answers").exists().isArray().notEmpty(),
@@ -48,6 +49,7 @@ router.get("/:formId",
 
 router.delete("/:formId",
   validateJWT,
+  isUserBlocked,
   param("formId").isNumeric().custom(formExists),
   checkValidations,
   isAdminOrFormOwner,

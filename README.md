@@ -8,7 +8,6 @@
 for the database base data.
 
 ### Missing Features
-- [ ] Add restrictions to blocked users.
 - [ ] Allow signup with services like Google.
 - [ ] Add allowed user for private templates.
 - [ ] Implement feature for question visibility.

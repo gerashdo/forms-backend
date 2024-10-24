@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { body, param, query } from "express-validator";
 import { getUserByIdController, getUsersController, loginController, signUpController, updateUserController } from "../controllers/authController";
-import { checkValidations, emailExists, isEmailUnique, isUserAdmin } from "../middlewares/userValidations";
+import { checkValidations, emailExists, isEmailUnique, isUserAdmin, isUserBlocked } from "../middlewares/userValidations";
 import { validateJWT } from "../middlewares/validateJwt";
 import { userExists } from "../helpers/validators/utils";
 import { ALLOWED_USER_ORDER_BY, ALLOWED_USER_ORDER_BY_FIELDS } from "../constants/user";
@@ -30,6 +30,7 @@ router.post("/login",
 
 router.get("/users/:id",
   validateJWT,
+  isUserBlocked,
   isUserAdmin,
   param("id").isNumeric().custom(userExists),
   checkValidations,
@@ -38,6 +39,7 @@ router.get("/users/:id",
 
 router.get("/users",
   validateJWT,
+  isUserBlocked,
   isUserAdmin,
   query("page").optional().isNumeric(),
   query("limit").optional().isNumeric(),
@@ -50,6 +52,7 @@ router.get("/users",
 
 router.patch("/users/:id",
   validateJWT,
+  isUserBlocked,
   isUserAdmin,
   param("id").isNumeric().custom(userExists),
   body("name").optional().isLength({min: 1}),

@@ -2,7 +2,7 @@ import { Router } from "express";
 import { body, param, query } from "express-validator";
 import fileUpload from 'express-fileupload';
 import { addQuestionController, createTemplateController, deleteQuestionFromTemplateController, deleteTemplateController, getTemplateByIdController, getTemplatesBySubmissionsController, getTemplatesController, updateTemplateController, updateTemplateQuestionsSequenceController } from "../controllers/templateController";
-import { checkValidations } from "../middlewares/userValidations";
+import { checkValidations, isUserBlocked } from "../middlewares/userValidations";
 import { validateJWT } from "../middlewares/validateJwt";
 import { isAdminOrTemplateOwner } from "../middlewares/templateValidations";
 import { noRepeatedIds, questionExists, templateExists, topicExists, userExists } from "../helpers/validators/utils";
@@ -19,6 +19,7 @@ router.use(fileUpload({
 
 router.post("/",
   validateJWT,
+  isUserBlocked,
   body("title").exists().isLength({min: 4}),
   body("userId").exists().isNumeric().custom(userExists),
   body("description").exists().isLength({min: 4}),
@@ -30,6 +31,8 @@ router.post("/",
 
 router.patch("/:templateId",
   validateJWT,
+  isUserBlocked,
+  isAdminOrTemplateOwner,
   param("templateId").exists().isNumeric().custom(templateExists),
   body("title").optional().isLength({min: 1}),
   body("description").optional().isLength({min: 1}),
@@ -67,6 +70,8 @@ router.get("/",
 
 router.delete("/:templateId",
   validateJWT,
+  isUserBlocked,
+  isAdminOrTemplateOwner,
   param("templateId").exists().isNumeric().custom(templateExists),
   checkValidations,
   isAdminOrTemplateOwner,
@@ -75,6 +80,8 @@ router.delete("/:templateId",
 
 router.post("/:templateId/questions",
   validateJWT,
+  isUserBlocked,
+  isAdminOrTemplateOwner,
   param("templateId").exists().isNumeric().custom(templateExists),
   body("title").exists().isLength({min: 1}),
   body("description").optional().isLength({min: 1}),
@@ -86,6 +93,8 @@ router.post("/:templateId/questions",
 
 router.delete("/:templateId/questions/:questionId",
   validateJWT,
+  isUserBlocked,
+  isAdminOrTemplateOwner,
   param("templateId").exists().isNumeric().custom(templateExists),
   param("questionId").exists().isNumeric().custom(questionExists),
   checkValidations,
@@ -94,6 +103,8 @@ router.delete("/:templateId/questions/:questionId",
 
 router.patch("/:templateId/reorder-questions",
   validateJWT,
+  isUserBlocked,
+  isAdminOrTemplateOwner,
   param("templateId").exists().isNumeric().custom(templateExists),
   body("questionsOrder").exists().isArray({min: 1})
     .withMessage("Questions order must be an array with at least one element")

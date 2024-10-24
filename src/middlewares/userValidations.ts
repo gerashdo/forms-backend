@@ -54,3 +54,15 @@ export const isUserAdmin = async (req: CustomRequest, res: Response, next: NextF
     next();
   }
 }
+
+export const isUserBlocked = async (req: CustomRequest, res: Response, next: NextFunction) => {
+  const user = req.user;
+  if(!user || user.blocked){
+    res.status(403).json({
+      ok: false,
+      errors: {status: {msg: 'Your account is blocked'}}
+    });
+  } else {
+    next();
+  }
+}
