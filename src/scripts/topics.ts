@@ -7,15 +7,20 @@ export const createBaseTopics = async () => {
   const topics = [
     {name: 'Education'},
     {name: 'Science'},
+    {name: 'Technology'},
+    {name: 'Health and Wellness'},
+    {name: 'Social Issues'},
+    {name: 'Environment'},
+    {name: 'Marketing'},
+    {name: 'Customer Feedback'},
+    {name: 'Research'},
+    {name: 'Community Engagement'},
+    {name: 'Event Planning'},
+    {name: 'Personal Development'},
+    {name: 'Entertainment'},
+    {name: 'Travel and Tourism'},
+    {name: 'Career Development'},
     {name: 'Other'},
-    // {name: 'History'},
-    // {name: 'English'},
-    // {name: 'Geography'},
-    // {name: 'Computer Science'},
-    // {name: 'Art'},
-    // {name: 'Music'},
-    // {name: 'Physical Education'},
-    // {name: 'Religion'},
   ]
   await Topic.bulkCreate(topics);
 }

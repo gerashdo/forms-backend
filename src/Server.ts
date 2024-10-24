@@ -51,7 +51,7 @@ export class Server {
   }
 
   syncDB() {
-    sequalize.sync({ force: false })
+    sequalize.sync({ force: true })
       .then(() => {
         console.log("[db]: Database synchronized");
         this.runScripts()
@@ -62,7 +62,7 @@ export class Server {
   }
 
   async runScripts() {
-    if (process.env.NODE_ENV !== 'development') return
+    // if (process.env.NODE_ENV !== 'development') return
     await createBaseTopics()
     await createBaseTags()
     await createBaseUsers()
